@@ -4,19 +4,21 @@ let gameSession = {
 };
 
 let randomIndex = Math.floor(Math.random() * gameSession.wordPool.length);
-let randomWord = gameSession.wordPool[randomIndex];
+let winningWord = gameSession.wordPool[randomIndex];
+
+document.getElementById("winningWord").innerHTML = winningWord
 
 let winningLetters = [];
 
 let rightEntries = [];
 let wrongEntries = [];
 
-//Define what letters are correct
-for (i = 0; i < randomWord.length; i++) {
-  winningLetters.push(randomWord[i]);
-}
+let numberOfGamesWon = 0;
 
-document.write(randomWord);
+//Define what letters are correct
+for (i = 0; i < winningWord.length; i++) {
+  winningLetters.push(winningWord[i]);
+}
 
 //Accept user input
 document.onkeyup = function(event) {
@@ -37,4 +39,34 @@ document.onkeyup = function(event) {
   console.log("Right entries: " + rightEntries);
   console.log("Wrong entries: " + wrongEntries);
   console.log("Remaining guesses: " + gameSession.guessesRemaining);
+
+  updateScoreboard();
+  checkForWin();
 };
+
+function updateScoreboard() {
+    document.getElementById("rightEntries").innerHTML = rightEntries;
+    document.getElementById("wrongEntries").innerHTML = wrongEntries;
+    document.getElementById("guessesRemaining").innerHTML = gameSession.guessesRemaining;
+    document.getElementById("gamesWon").innerHTML = numberOfGamesWon;
+}
+
+function checkForWin() {
+    //For every winning letter
+    let neededToWin = winningLetters.length;
+    let gotRight = 0;
+    for(i=0; i < winningLetters.length; i++) {
+        //If it exists in rightEntries
+        if (rightEntries.indexOf(winningLetters[i]) !== -1) {
+            //Increase the number of letters gotten right by one
+            gotRight = gotRight +1
+        }
+    }
+    //If the number of letters gotten right is equal to that needed to win, player wins
+    if(gotRight === neededToWin) {
+        alert('You won!')
+        numberOfGamesWon += 1;
+        updateScoreboard();
+    }
+    console.log("Got right: " + gotRight)
+}
