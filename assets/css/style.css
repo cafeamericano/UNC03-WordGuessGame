@@ -1,0 +1,32 @@
+body, html {
+    margin: 0px;
+    padding: 0px
+}
+
+p {
+    background: white
+}
+
+.container {
+    position: relative;
+    text-align: center
+}
+
+#animation-container {
+    background-image: url("../images/trees-and-bushes.png");
+    height: 300px
+}
+
+#evilEye {
+    position: absolute;
+    transform: scale(4);
+    margin-top: 130px;
+    left: 5%
+}
+
+#princess {
+    position: absolute;
+    right: 8%;
+    transform: scale(3);
+    margin-top: 130px;
+}

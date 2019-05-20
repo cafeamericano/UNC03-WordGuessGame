@@ -1,7 +1,7 @@
 //**************************************************INITIALIZE GLOBAL VARIABLES**************************************************
 
 let wordPool = ["mario", "luigi", "yoshi", "bowser"];
-let defaultBeginGuesses = 10;
+let defaultBeginGuesses = 5;
 
 let numberOfGamesWon = 0;
 let numberOfGamesLost = 0;
@@ -15,11 +15,22 @@ let concealedLetters = [];
 let rightEntries = [];
 let wrongEntries = [];
 
+let defaultEvilEyeXposition = "5%";
+let evilEyeXposition = 5;
+
+var battleTheme = document.getElementById("battleTheme");
+var gameOver = document.getElementById("gameOverSound");
+var fanfare = document.getElementById("fanfare");
+
 //**************************************************OBJECTS**************************************************
 
 //**************************************************FUNCTIONS**************************************************
 
 function beginNewGame() {
+  fanfare.pause();
+  fanfare.currentTime = 0;
+  gameOver.pause();
+  gameOver.currentTime = 0;
   guessesRemaining = defaultBeginGuesses; //Reset
   winningLetters = []; //Reset
   concealedLetters = []; //Reset
@@ -31,7 +42,6 @@ function beginNewGame() {
   for (i = 0; i < winningWord.length; i++) {
     winningLetters.push(winningWord[i].toLowerCase());
   }
-  document.getElementById("winningWord").innerHTML = winningWord;
 
   //Display anonymized letters
   for (i = 0; i < winningWord.length; i++) {
@@ -39,6 +49,11 @@ function beginNewGame() {
   }
 
   updateScoreboard(); //Reset
+  document.getElementById("princess").style.transform = "scale(3)";
+  document.getElementById("evilEye").style.left = defaultEvilEyeXposition;
+  evilEyeXposition = 5;
+
+  battleTheme.play();
 }
 
 function updateScoreboard() {
@@ -68,24 +83,35 @@ function checkForWin() {
   }
   if (gotRight === neededToWin) {
     //If the number of letters gotten right is equal to that needed to win, player wins
-    alert("You won!");
+    battleTheme.pause();
+    fanfare.play();
     numberOfGamesWon += 1;
     updateScoreboard();
-    beginNewGame();
+    setTimeout(function() {
+      beginNewGame();
+    }, 5000);
   }
 }
 
 function checkForLoss() {
-  if (guessesRemaining < 0) {
+  if (guessesRemaining === 0) {
+    battleTheme.pause();
+    gameOver.play();
+    document.getElementById("princess").style.transform =
+      "rotate(90deg) scale(3)";
     numberOfGamesLost += 1;
-    beginNewGame();
+    setTimeout(function() {
+      beginNewGame();
+    }, 6000);
   }
 }
 
 //**************************************************RUNTIME**************************************************
 
 //Start the first game
-beginNewGame();
+setTimeout(function() {
+  beginNewGame();
+}, 0);
 
 //Handle user input
 document.onkeyup = function(event) {
@@ -108,6 +134,10 @@ document.onkeyup = function(event) {
   if (winningLetters.indexOf(x) === -1 && wrongEntries.indexOf(x) === -1) {
     guessesRemaining = guessesRemaining - 1;
     wrongEntries.push(x);
+
+    evilEyeXposition += 100 / defaultBeginGuesses - 4.3;
+    document.getElementById("evilEye").style.left = evilEyeXposition + "%";
+
     //If a winning letter that hasn't already been entered, reward
   } else if (
     winningLetters.indexOf(x) !== -1 &&
@@ -115,15 +145,14 @@ document.onkeyup = function(event) {
   ) {
     rightEntries.push(x);
 
-    for(i=0; i < winningLetters.length; i++) {
-        if (x === winningLetters[i]) {
-            concealedLetters[i] = winningLetters[i]
-        }
+    for (i = 0; i < winningLetters.length; i++) {
+      if (x === winningLetters[i]) {
+        concealedLetters[i] = winningLetters[i];
+      }
     }
-
   }
 
   checkForWin();
-  checkForLoss();
   updateScoreboard();
+  checkForLoss();
 };

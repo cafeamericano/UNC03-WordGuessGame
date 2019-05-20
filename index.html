@@ -10,13 +10,24 @@
         <link rel="stylesheet" href="assets/css/style.css">
     </head>
     <body>
-        <p id="winningWord"></p>
-        <p id="concealedLetters"></p>
-        <p id="rightEntries"></p>
-        <p id="wrongEntries"></p>
-        <p id="guessesRemaining"></p>
-        <p id="gamesWon"></p>
-        <p id="gamesLost"></p>
+        <audio loop id="battleTheme"><source src="assets/audio/battletheme.ogg" type="audio/ogg"></audio>
+        <audio loop id="gameOverSound"><source src="assets/audio/gameoversound.wav" type="audio/ogg"></audio>
+        <audio loop id="fanfare"><source src="assets/audio/fanfare.ogg" type="audio/ogg"></audio>
+
+        <div id="container">
+            <div id = "animation-container">
+                <img id="evilEye" src="assets/images/evileye.png">
+                <img id="princess" src="assets/images/princess.png">
+            </div>
+            <p id="winningWord"></p>
+            <p id="concealedLetters"></p>
+            <p id="rightEntries"></p>
+            <p id="wrongEntries"></p>
+            <p id="guessesRemaining"></p>
+            <p id="gamesWon"></p>
+            <p id="gamesLost"></p>
+        </div>
+        
         <script src="assets/javascript/game.js"></script>
     </body>
 </html>
