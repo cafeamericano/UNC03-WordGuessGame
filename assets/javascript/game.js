@@ -114,6 +114,13 @@ document.onkeyup = function(event) {
     rightEntries.indexOf(x) === -1
   ) {
     rightEntries.push(x);
+
+    for(i=0; i < winningLetters.length; i++) {
+        if (x === winningLetters[i]) {
+            concealedLetters[i] = winningLetters[i]
+        }
+    }
+
   }
 
   checkForWin();
