@@ -1,6 +1,6 @@
 //**************************************************INITIALIZE GLOBAL VARIABLES**************************************************
 
-let wordPool = ["Mario", "Luigi", "Yoshi", "Bowser"];
+let wordPool = ["mario", "luigi", "yoshi", "bowser"];
 let defaultBeginGuesses = 10;
 
 let numberOfGamesWon = 0;
@@ -37,9 +37,6 @@ function beginNewGame() {
   for (i = 0; i < winningWord.length; i++) {
     concealedLetters.push("__  ");
   }
-  
-  document.getElementById("concealedLetters").innerHTML =
-    "Concealed letters: " + concealedLetters.join(' ');;
 
   updateScoreboard(); //Reset
 }
@@ -55,6 +52,8 @@ function updateScoreboard() {
     "Number of games won: " + numberOfGamesWon;
   document.getElementById("gamesLost").innerHTML =
     "Number of games lost: " + numberOfGamesLost;
+  document.getElementById("concealedLetters").innerHTML =
+    "Concealed letters: " + concealedLetters.join(" ");
 }
 
 function checkForWin() {
