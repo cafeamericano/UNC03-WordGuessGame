@@ -1,6 +1,6 @@
 //**************************************************INITIALIZE GLOBAL VARIABLES**************************************************
 
-let wordPool = ["mario", "luigi", "yoshi", "bowser"];
+let wordPool = ["sword", "axe", "shield", "staff", "helmet", "gloves", "boots", "magic", "potion", "monster"];
 let defaultBeginGuesses = 5;
 
 let numberOfGamesWon = 0;
