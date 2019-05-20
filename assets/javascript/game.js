@@ -4,6 +4,8 @@ let wordPool = ["Mario", "Luigi", "Yoshi", "Bowser"];
 let guessesRemaining = 0;
 
 let numberOfGamesWon = 0;
+let numberOfGamesLost = 0;
+
 let randomIndex = 0;
 let winningWord = "";
 let winningLetters = [];
@@ -17,7 +19,10 @@ let wrongEntries = [];
 function beginNewGame() {
   updateScoreboard(); //Reset
   guessesRemaining = 20; //Reset
-  winningLetters, rightEntries, (wrongEntries = []); //Reset
+  winningLetters = []; //Reset
+  rightEntries = []; //Reset
+  wrongEntries = []; //Reset
+
   randomIndex = Math.floor(Math.random() * wordPool.length);
   winningWord = wordPool[randomIndex];
   for (i = 0; i < winningWord.length; i++) {
@@ -35,6 +40,8 @@ function updateScoreboard() {
     "Guesses remaining: " + guessesRemaining;
   document.getElementById("gamesWon").innerHTML =
     "Number of games won: " + numberOfGamesWon;
+document.getElementById("gamesLost").innerHTML =
+    "Number of games lost: " + numberOfGamesLost;
 }
 
 function checkForWin() {
@@ -52,7 +59,15 @@ function checkForWin() {
     alert("You won!");
     numberOfGamesWon += 1;
     updateScoreboard();
+    beginNewGame();
   }
+}
+
+function checkForLoss() {
+    if(guessesRemaining < 0) {
+        numberOfGamesLost += 1;
+        beginNewGame();
+    }
 }
 
 //**************************************************RUNTIME**************************************************
@@ -76,6 +91,7 @@ document.onkeyup = function(event) {
     rightEntries.push(x);
   }
 
-  updateScoreboard();
   checkForWin();
+  checkForLoss();
+  updateScoreboard();
 };
