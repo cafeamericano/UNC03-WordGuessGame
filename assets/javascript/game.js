@@ -1,14 +1,17 @@
 //**************************************************INITIALIZE GLOBAL VARIABLES**************************************************
 
 let wordPool = ["Mario", "Luigi", "Yoshi", "Bowser"];
-let guessesRemaining = 0;
+let defaultBeginGuesses = 10;
 
 let numberOfGamesWon = 0;
 let numberOfGamesLost = 0;
 
 let randomIndex = 0;
 let winningWord = "";
+
 let winningLetters = [];
+let concealedLetters = [];
+
 let rightEntries = [];
 let wrongEntries = [];
 
@@ -17,9 +20,9 @@ let wrongEntries = [];
 //**************************************************FUNCTIONS**************************************************
 
 function beginNewGame() {
-  updateScoreboard(); //Reset
-  guessesRemaining = 20; //Reset
+  guessesRemaining = defaultBeginGuesses; //Reset
   winningLetters = []; //Reset
+  concealedLetters = []; //Reset
   rightEntries = []; //Reset
   wrongEntries = []; //Reset
 
@@ -29,6 +32,16 @@ function beginNewGame() {
     winningLetters.push(winningWord[i].toLowerCase());
   }
   document.getElementById("winningWord").innerHTML = winningWord;
+
+  //Display anonymized letters
+  for (i = 0; i < winningWord.length; i++) {
+    concealedLetters.push("__  ");
+  }
+  
+  document.getElementById("concealedLetters").innerHTML =
+    "Concealed letters: " + concealedLetters.join(' ');;
+
+  updateScoreboard(); //Reset
 }
 
 function updateScoreboard() {
@@ -40,7 +53,7 @@ function updateScoreboard() {
     "Guesses remaining: " + guessesRemaining;
   document.getElementById("gamesWon").innerHTML =
     "Number of games won: " + numberOfGamesWon;
-document.getElementById("gamesLost").innerHTML =
+  document.getElementById("gamesLost").innerHTML =
     "Number of games lost: " + numberOfGamesLost;
 }
 
@@ -64,10 +77,10 @@ function checkForWin() {
 }
 
 function checkForLoss() {
-    if(guessesRemaining < 0) {
-        numberOfGamesLost += 1;
-        beginNewGame();
-    }
+  if (guessesRemaining < 0) {
+    numberOfGamesLost += 1;
+    beginNewGame();
+  }
 }
 
 //**************************************************RUNTIME**************************************************
@@ -78,7 +91,20 @@ beginNewGame();
 //Handle user input
 document.onkeyup = function(event) {
   //Define key entered as 'x'
-  let x = event.key.toLowerCase();
+  let x;
+  let validKeyStrokes = [];
+  //Allow uppercase characters
+  for (i = 65; i < 91; i++) {
+    validKeyStrokes.push(i);
+  }
+  //Allow lowercase charcters
+  for (i = 97; i < 123; i++) {
+    validKeyStrokes.push(i);
+  }
+  //Define key entered as long as it's a lowercase or uppercase letter
+  if (validKeyStrokes.indexOf(event.keyCode) !== -1) {
+    x = event.key.toLowerCase();
+  }
   //If a losing letter that hasn't been entered before, penalize
   if (winningLetters.indexOf(x) === -1 && wrongEntries.indexOf(x) === -1) {
     guessesRemaining = guessesRemaining - 1;
