@@ -69,28 +69,8 @@ let game = {
     scoreboard.update();
     princess.resetSprite();
     enemy.resetSprite();
-
-    activeAnimationEnemy = setInterval(function() {
-      if (game.ended === false) {
-        console.log(enemy.avatars.current);
-        if (enemy.avatars.current == enemy.avatars.closedEye) {
-          enemy.setAvatar(enemy.avatars.openEye);
-        } else {
-          enemy.setAvatar(enemy.avatars.closedEye);
-        }
-      }
-    }, 1000);
-
-    activeAnimationPrincess = setInterval(function() {
-      if (game.ended === false) {
-        console.log(princess.avatars.current);
-        if (princess.avatars.current == princess.avatars.alive) {
-          princess.setAvatar(princess.avatars.alternate);
-        } else {
-          princess.setAvatar(princess.avatars.alive);
-        }
-      }
-    }, 500);
+    princess.animate();
+    enemy.animate();
   }
 };
 
@@ -254,6 +234,18 @@ let enemy = {
   resetSprite: function() {
     this.setAvatar(this.avatars.openEye);
     this.resetStartPosition();
+  },
+  animate: function() {
+    activeAnimationEnemy = setInterval(function() {
+      if (game.ended === false) {
+        console.log(enemy.avatars.current);
+        if (enemy.avatars.current == enemy.avatars.closedEye) {
+          enemy.setAvatar(enemy.avatars.openEye);
+        } else {
+          enemy.setAvatar(enemy.avatars.closedEye);
+        }
+      }
+    }, 1000);
   }
 };
 
@@ -273,6 +265,18 @@ let princess = {
   resetSprite: function() {
     this.setAvatar(this.avatars.alive);
     document.getElementById("princess").style.transform = "scale(3)";
+  },
+  animate: function() {
+    activeAnimationPrincess = setInterval(function() {
+      if (game.ended === false) {
+        console.log(princess.avatars.current);
+        if (princess.avatars.current == princess.avatars.alive) {
+          princess.setAvatar(princess.avatars.alternate);
+        } else {
+          princess.setAvatar(princess.avatars.alive);
+        }
+      }
+    }, 500);
   }
 };
 
