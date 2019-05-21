@@ -1,5 +1,7 @@
 //**************************************************INITIALIZE GLOBAL VARIABLES**************************************************
 let screenWidth = 600;
+let activeAnimationEnemy;
+let activeAnimationPrincess;
 
 let wordPool = [
   "sword",
@@ -56,6 +58,8 @@ let game = {
   },
 
   beginNew: function() {
+    clearInterval(activeAnimationEnemy);
+    clearInterval(activeAnimationPrincess);
     this.resetGuessCount();
     this.ended = false;
     outcomeMessage.reset();
@@ -66,17 +70,27 @@ let game = {
     princess.resetSprite();
     enemy.resetSprite();
 
-    setInterval(function() {
+    activeAnimationEnemy = setInterval(function() {
       if (game.ended === false) {
-        console.log(enemy.avatars.current)
+        console.log(enemy.avatars.current);
         if (enemy.avatars.current == enemy.avatars.closedEye) {
           enemy.setAvatar(enemy.avatars.openEye);
-        }
-        if (enemy.avatars.current == enemy.avatars.openEye) {
+        } else {
           enemy.setAvatar(enemy.avatars.closedEye);
         }
       }
     }, 1000);
+
+    activeAnimationPrincess = setInterval(function() {
+      if (game.ended === false) {
+        console.log(princess.avatars.current);
+        if (princess.avatars.current == princess.avatars.alive) {
+          princess.setAvatar(princess.avatars.alternate);
+        } else {
+          princess.setAvatar(princess.avatars.alive);
+        }
+      }
+    }, 500);
   }
 };
 
@@ -248,6 +262,7 @@ let princess = {
   avatars: {
     current: "",
     alive: "assets/images/princess.png",
+    alternate: "assets/images/princessAlternate.png",
     dead: "assets/images/deadPrincess.png"
   },
   setAvatar: function(chosenavatar) {
