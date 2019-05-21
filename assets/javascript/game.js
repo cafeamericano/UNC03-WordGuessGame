@@ -58,6 +58,7 @@ let game = {
   beginNew: function() {
     this.resetGuessCount();
     this.ended = false;
+    outcomeMessage.reset();
     audio.reset();
     magicWord.clear();
     magicWord.choose();
@@ -126,11 +127,28 @@ let input = {
   }
 };
 
+//Outcome Overlay//////////////////////////////////////////////////
+let outcomeMessage = {
+  notifyLoss: function() {
+    document.getElementById("gameOutcome").innerHTML =
+    "You have lost."
+  },
+  notifyWin: function() {
+    document.getElementById("gameOutcome").innerHTML =
+      "You have won!"
+  },
+  reset: function() {
+    document.getElementById("gameOutcome").innerHTML =
+      ""
+  }
+}
+
 //Judge//////////////////////////////////////////////////
 let judge = {
   checkForLoss: function() {
     if (game.guessesRemaining === 0) {
       game.ended = true;
+      outcomeMessage.notifyLoss();
       audio.reset();
       audio.gameOver.play();
       princess.makeDead();
@@ -153,6 +171,7 @@ let judge = {
     if (gotRight === neededToWin) {
       //If the number of letters gotten right is equal to that needed to win, player wins
       game.ended = true;
+      outcomeMessage.notifyWin();
       audio.reset();
       audio.fanfare.play();
       game.numberOfGamesWon += 1;
