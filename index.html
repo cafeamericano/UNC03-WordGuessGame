@@ -1,38 +1,58 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="assets/css/style.css">
-        <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
-    </head>
-    <body class="bg-dark text-light text-center">
-        <audio loop id="battleTheme"><source src="assets/audio/battletheme.ogg" type="audio/ogg"></audio>
-        <audio loop id="gameOverSound"><source src="assets/audio/gameoversound.wav" type="audio/ogg"></audio>
-        <audio loop id="fanfare"><source src="assets/audio/fanfare.ogg" type="audio/ogg"></audio>
-            <h1>Word Game Rescue</h1>
-            <h6>Guess the RPG-themed word to save the princess!</h6>
-            <br>
-        <div id="container">
-            <div id = "animation-container" style="width: 600px; position: relative; margin: auto; overflow: hidden;">
-                <img id="evilEye" style="position: absolute" src="assets/images/evileye.png">
-                <h1 style="position: absolute; left: 50px; top: 100px; text-align: center; z-index: 99" id="gameOutcome"></h1>
-                <img id="princess" style="position: absolute" src="assets/images/princess.png">
-            </div>
-            <p id="winningWord"></p>
-            <p id="concealedLetters"></p>
-            <p id="rightEntries"></p>
-            <p id="wrongEntries"></p>
-            <p id="guessesRemaining"></p>
-            <p id="gamesWon"></p>
-            <p id="gamesLost"></p>
-        </div>
-        
-        <script src="assets/javascript/game.js" aysnc defer></script>
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-dark text-light text-center">
+    <audio loop id="battleTheme">
+      <source src="assets/audio/battletheme.ogg" type="audio/ogg" />
+    </audio>
+    <audio loop id="gameOverSound">
+      <source src="assets/audio/gameoversound.wav" type="audio/ogg" />
+    </audio>
+    <audio loop id="fanfare">
+      <source src="assets/audio/fanfare.ogg" type="audio/ogg" />
+    </audio>
+    <h1>Word Game Rescue</h1>
+    <h6>Guess the RPG-themed word to save the princess!</h6>
+    <br />
+    <div id="container">
+      <div
+        id="animation-container"
+        style="width: 600px; position: relative; margin: auto; overflow: hidden;"
+      >
+        <img id="enemy" style="position: absolute" />
+        <h1
+          style="position: absolute; left: 50px; top: 100px; text-align: center; z-index: 99"
+          id="gameOutcome"
+        ></h1>
+        <img id="princess" style="position: absolute" />
+      </div>
+      <p id="winningWord"></p>
+      <p id="concealedLetters"></p>
+      <p id="rightEntries"></p>
+      <p id="wrongEntries"></p>
+      <p id="guessesRemaining"></p>
+      <p id="gamesWon"></p>
+      <p id="gamesLost"></p>
+    </div>
+
+    <script src="assets/javascript/game.js" aysnc defer></script>
+  </body>
 </html>

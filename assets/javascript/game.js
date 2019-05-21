@@ -64,8 +64,19 @@ let game = {
     magicWord.choose();
     scoreboard.update();
     princess.resetSprite();
-    enemy.resetStartPosition();
-    //audio.battleTheme.play();
+    enemy.resetSprite();
+
+    setInterval(function() {
+      if (game.ended === false) {
+        console.log(enemy.avatars.current)
+        if (enemy.avatars.current == enemy.avatars.closedEye) {
+          enemy.setAvatar(enemy.avatars.openEye);
+        }
+        if (enemy.avatars.current == enemy.avatars.openEye) {
+          enemy.setAvatar(enemy.avatars.closedEye);
+        }
+      }
+    }, 1000);
   }
 };
 
@@ -130,18 +141,15 @@ let input = {
 //Outcome Overlay//////////////////////////////////////////////////
 let outcomeMessage = {
   notifyLoss: function() {
-    document.getElementById("gameOutcome").innerHTML =
-    "You have lost."
+    document.getElementById("gameOutcome").innerHTML = "You have lost.";
   },
   notifyWin: function() {
-    document.getElementById("gameOutcome").innerHTML =
-      "You have won!"
+    document.getElementById("gameOutcome").innerHTML = "You have won!";
   },
   reset: function() {
-    document.getElementById("gameOutcome").innerHTML =
-      ""
+    document.getElementById("gameOutcome").innerHTML = "";
   }
-}
+};
 
 //Judge//////////////////////////////////////////////////
 let judge = {
@@ -151,7 +159,7 @@ let judge = {
       outcomeMessage.notifyLoss();
       audio.reset();
       audio.gameOver.play();
-      princess.makeDead();
+      princess.setAvatar(princess.avatars.dead);
       game.numberOfGamesLost += 1;
       setTimeout(function() {
         game.beginNew();
@@ -207,28 +215,48 @@ let scoreboard = {
 
 //Enemy//////////////////////////////////////////////////
 let enemy = {
+  avatars: {
+    current: "",
+    openEye: "assets/images/openEye.png",
+    closedEye: "assets/images/closedEye.png"
+  },
   defaultXposition: 20,
   xPosition: this.defaultXposition,
+  setAvatar: function(chosenavatar) {
+    document.getElementById("enemy").setAttribute("src", `${chosenavatar}`);
+    document.getElementById("enemy").style.transform = "scale(4)";
+    this.avatars.current = chosenavatar;
+  },
   moveRight: function() {
     this.xPosition +=
       screenWidth / game.defaultBeginGuesses - this.defaultXposition;
-    document.getElementById("evilEye").style.left = this.xPosition + "px";
+    document.getElementById("enemy").style.left = this.xPosition + "px";
     console.log(this.xPosition);
   },
   resetStartPosition: function() {
     this.xPosition = this.defaultXposition;
-    document.getElementById("evilEye").style.left =
-      this.defaultXposition + "px";
+    document.getElementById("enemy").style.left = this.defaultXposition + "px";
+  },
+  resetSprite: function() {
+    this.setAvatar(this.avatars.openEye);
+    this.resetStartPosition();
   }
 };
 
 //Princess//////////////////////////////////////////////////
 let princess = {
-  makeDead: function() {
-    document.getElementById("princess").style.transform =
-      "rotate(90deg) scale(3)";
+  avatars: {
+    current: "",
+    alive: "assets/images/princess.png",
+    dead: "assets/images/deadPrincess.png"
+  },
+  setAvatar: function(chosenavatar) {
+    document.getElementById("princess").setAttribute("src", `${chosenavatar}`);
+    document.getElementById("princess").style.transform = "scale(3)";
+    this.avatars.current = chosenavatar;
   },
   resetSprite: function() {
+    this.setAvatar(this.avatars.alive);
     document.getElementById("princess").style.transform = "scale(3)";
   }
 };
