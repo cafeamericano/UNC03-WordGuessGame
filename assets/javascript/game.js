@@ -1,7 +1,5 @@
 //**************************************************INITIALIZE GLOBAL VARIABLES**************************************************
 let screenWidth = 600;
-let activeAnimationEnemy;
-let activeAnimationPrincess;
 
 let wordPool = [
   "sword",
