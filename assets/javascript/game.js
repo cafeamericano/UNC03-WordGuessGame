@@ -223,7 +223,7 @@ let scoreboard = {
     document.getElementById("gamesLost").innerHTML =
       "Number of games lost: " + game.numberOfGamesLost;
     document.getElementById("concealedLetters").innerHTML =
-      "Secret word: " + magicWord.concealedLetters.join(" ");
+      magicWord.concealedLetters.join(" ");
   }
 };
 

@@ -29,9 +29,11 @@
     <audio loop id="fanfare">
       <source src="assets/audio/fanfare.ogg" type="audio/ogg" />
     </audio>
-    <h1>Word Game Rescue</h1>
+
+    <h1 class="mt-5">Word Game Rescue</h1>
     <h6>Guess the RPG-themed word to save the princess!</h6>
-    <br />
+    <br/>
+    <p id="concealedLetters"></p>
     <div id="container">
       <div
         id="animation-container"
@@ -45,7 +47,7 @@
         <img id="princess" style="position: absolute" />
       </div>
       <p id="winningWord"></p>
-      <p id="concealedLetters"></p>
+      
       <p id="rightEntries"></p>
       <p id="wrongEntries"></p>
       <p id="guessesRemaining"></p>
