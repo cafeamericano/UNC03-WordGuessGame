@@ -11,15 +11,17 @@
         <link rel="stylesheet" href="assets/css/style.css">
         <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
     </head>
-    <body class="bg-dark text-light" style="text-align: center">
+    <body class="bg-dark text-light text-center">
         <audio loop id="battleTheme"><source src="assets/audio/battletheme.ogg" type="audio/ogg"></audio>
         <audio loop id="gameOverSound"><source src="assets/audio/gameoversound.wav" type="audio/ogg"></audio>
         <audio loop id="fanfare"><source src="assets/audio/fanfare.ogg" type="audio/ogg"></audio>
             <h1>Word Game Rescue</h1>
+            <h6>Guess the traditional RPG item to save the princess!</h6>
+            <br>
         <div id="container">
-            <div id = "animation-container">
-                <img id="evilEye" src="assets/images/evileye.png">
-                <img id="princess" src="assets/images/princess.png">
+            <div id = "animation-container" style="width: 600px; position: relative; margin: auto; overflow: hidden;">
+                <img id="evilEye" style="position: absolute" src="assets/images/evileye.png">
+                <img id="princess" style="position: absolute" src="assets/images/princess.png">
             </div>
             <p id="winningWord"></p>
             <p id="concealedLetters"></p>
@@ -28,6 +30,7 @@
             <p id="guessesRemaining"></p>
             <p id="gamesWon"></p>
             <p id="gamesLost"></p>
+            <input>
         </div>
         
         <script src="assets/javascript/game.js" aysnc defer></script>

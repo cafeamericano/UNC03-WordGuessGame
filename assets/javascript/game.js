@@ -1,4 +1,5 @@
 //**************************************************INITIALIZE GLOBAL VARIABLES**************************************************
+let screenWidth = 600;
 
 let wordPool = [
   "sword",
@@ -18,7 +19,7 @@ let wordPool = [
 //Magic Word//////////////////////////////////////////////////
 let magicWord = {
   randomIndex: 0,
-  winningWord: '',
+  winningWord: "",
   winningLetters: [],
   concealedLetters: [],
   rightEntries: [],
@@ -39,13 +40,13 @@ let magicWord = {
     for (i = 0; i < this.winningWord.length; i++) {
       this.concealedLetters.push("__  ");
     }
-  },
-
-}
+  }
+};
 
 //Game//////////////////////////////////////////////////
 let game = {
-  defaultBeginGuesses: 5,
+  ended: false,
+  defaultBeginGuesses: 9,
   guessesRemaining: 0,
   numberOfGamesWon: 0,
   numberOfGamesLost: 0,
@@ -53,24 +54,26 @@ let game = {
   resetGuessCount: function() {
     this.guessesRemaining = this.defaultBeginGuesses; //Reset
   },
-  
+
   beginNew: function() {
     this.resetGuessCount();
+    this.ended = false;
     audio.reset();
     magicWord.clear();
     magicWord.choose();
     scoreboard.update();
     princess.resetSprite();
     enemy.resetStartPosition();
-    audio.battleTheme.play();
+    //audio.battleTheme.play();
   }
 };
 
-//Status//////////////////////////////////////////////////
-let status = {
+//Judge//////////////////////////////////////////////////
+let judge = {
   checkForLoss: function() {
     if (game.guessesRemaining === 0) {
-      audio.battleTheme.pause();
+      game.ended = true;
+      audio.reset();
       audio.gameOver.play();
       princess.makeDead();
       game.numberOfGamesLost += 1;
@@ -91,7 +94,8 @@ let status = {
     }
     if (gotRight === neededToWin) {
       //If the number of letters gotten right is equal to that needed to win, player wins
-      audio.battleTheme.pause();
+      game.ended = true;
+      audio.reset();
       audio.fanfare.play();
       game.numberOfGamesWon += 1;
       scoreboard.update();
@@ -100,7 +104,7 @@ let status = {
       }, 5000);
     }
   },
-  check: function() {
+  checkWinOrLoss: function() {
     this.checkForWin();
     this.checkForLoss();
   }
@@ -109,34 +113,42 @@ let status = {
 //Scoreboard//////////////////////////////////////////////////
 let scoreboard = {
   update: function() {
-    document.getElementById("rightEntries").innerHTML = "Right entries: " + magicWord.rightEntries;
-    document.getElementById("wrongEntries").innerHTML = "Wrong entries: " + magicWord.wrongEntries;
-    document.getElementById("guessesRemaining").innerHTML = "Guesses remaining: " + game.guessesRemaining;
-    document.getElementById("gamesWon").innerHTML = "Number of games won: " + game.numberOfGamesWon;
-    document.getElementById("gamesLost").innerHTML = "Number of games lost: " + game.numberOfGamesLost;
-    document.getElementById("concealedLetters").innerHTML = "Concealed letters: " + magicWord.concealedLetters.join(" ");
+    document.getElementById("rightEntries").innerHTML =
+      "Right entries: " + magicWord.rightEntries;
+    document.getElementById("wrongEntries").innerHTML =
+      "Wrong entries: " + magicWord.wrongEntries;
+    document.getElementById("guessesRemaining").innerHTML =
+      "Guesses remaining: " + game.guessesRemaining;
+    document.getElementById("gamesWon").innerHTML =
+      "Number of games won: " + game.numberOfGamesWon;
+    document.getElementById("gamesLost").innerHTML =
+      "Number of games lost: " + game.numberOfGamesLost;
+    document.getElementById("concealedLetters").innerHTML =
+      "Secret word: " + magicWord.concealedLetters.join(" ");
   }
 };
 
 //Enemy//////////////////////////////////////////////////
 let enemy = {
-  defaultXposition: 50,
-  xPosition: 5,
+  defaultXposition: 20,
+  xPosition: this.defaultXposition,
   moveRight: function() {
-    this.xPosition += 100;
+    this.xPosition += (screenWidth/game.defaultBeginGuesses) - this.defaultXposition;
     document.getElementById("evilEye").style.left = this.xPosition + "px";
-    console.log(this.xPosition)
+    console.log(this.xPosition);
   },
   resetStartPosition: function() {
     this.xPosition = this.defaultXposition;
-    document.getElementById("evilEye").style.left = this.defaultXposition + "px";
+    document.getElementById("evilEye").style.left =
+      this.defaultXposition + "px";
   }
 };
 
 //Princess//////////////////////////////////////////////////
 let princess = {
   makeDead: function() {
-    document.getElementById("princess").style.transform = "rotate(90deg) scale(3)";
+    document.getElementById("princess").style.transform =
+      "rotate(90deg) scale(3)";
   },
   resetSprite: function() {
     document.getElementById("princess").style.transform = "scale(3)";
@@ -158,53 +170,59 @@ let audio = {
   }
 };
 
+//**************************************************FUNCTIONS**************************************************
+
+function processInput(event) {
+  //Prevent input from being accepted when game is over
+  if (game.ended === false) {
+    //Define key entered as 'x'
+    let x;
+    let validKeyStrokes = [];
+    //Allow uppercase characters
+    for (i = 65; i < 91; i++) {
+      validKeyStrokes.push(i);
+    }
+    //Allow lowercase charcters
+    for (i = 97; i < 123; i++) {
+      validKeyStrokes.push(i);
+    }
+    //Define key entered as long as it's a lowercase or uppercase letter
+    if (validKeyStrokes.indexOf(event.keyCode) !== -1) {
+      x = event.key.toLowerCase();
+    }
+    //If a losing letter that hasn't been entered before, penalize
+    if (
+      magicWord.winningLetters.indexOf(x) === -1 &&
+      magicWord.wrongEntries.indexOf(x) === -1
+    ) {
+      game.guessesRemaining = game.guessesRemaining - 1;
+      magicWord.wrongEntries.push(x);
+      enemy.moveRight();
+
+      //If a winning letter that hasn't already been entered, reward
+    } else if (
+      magicWord.winningLetters.indexOf(x) !== -1 &&
+      magicWord.rightEntries.indexOf(x) === -1
+    ) {
+      magicWord.rightEntries.push(x);
+
+      for (i = 0; i < magicWord.winningLetters.length; i++) {
+        if (x === magicWord.winningLetters[i]) {
+          magicWord.concealedLetters[i] = magicWord.winningLetters[i];
+        }
+      }
+    }
+    judge.checkWinOrLoss();
+    scoreboard.update();
+  }
+}
+
 //**************************************************RUNTIME**************************************************
 
 //Start the first game
-let ready = confirm("Ready to play?")
-if(ready){
-  audio.reset();
-  game.beginNew();
-}
+game.beginNew();
 
 //Handle user input
 document.onkeyup = function(event) {
-  //Define key entered as 'x'
-  let x;
-  let validKeyStrokes = [];
-  //Allow uppercase characters
-  for (i = 65; i < 91; i++) {
-    validKeyStrokes.push(i);
-  }
-  //Allow lowercase charcters
-  for (i = 97; i < 123; i++) {
-    validKeyStrokes.push(i);
-  }
-  //Define key entered as long as it's a lowercase or uppercase letter
-  if (validKeyStrokes.indexOf(event.keyCode) !== -1) {
-    x = event.key.toLowerCase();
-  }
-  //If a losing letter that hasn't been entered before, penalize
-  if (magicWord.winningLetters.indexOf(x) === -1 && magicWord.wrongEntries.indexOf(x) === -1) {
-    game.guessesRemaining = game.guessesRemaining - 1;
-    magicWord.wrongEntries.push(x);
-    enemy.moveRight();
-    
-
-    //If a winning letter that hasn't already been entered, reward
-  } else if (
-    magicWord.winningLetters.indexOf(x) !== -1 &&
-    magicWord.rightEntries.indexOf(x) === -1
-  ) {
-    magicWord.rightEntries.push(x);
-
-    for (i = 0; i < magicWord.winningLetters.length; i++) {
-      if (x === magicWord.winningLetters[i]) {
-        magicWord.concealedLetters[i] = magicWord.winningLetters[i];
-      }
-    }
-  }
-
-  status.check();
-  scoreboard.update();
+  processInput(event);
 };
