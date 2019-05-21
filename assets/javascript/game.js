@@ -68,6 +68,64 @@ let game = {
   }
 };
 
+//Input Processor//////////////////////////////////////////////////
+let input = {
+  normalize: function(event) {
+    let x;
+    let validKeyStrokes = [];
+    //Allow uppercase characters
+    for (i = 65; i < 91; i++) {
+      validKeyStrokes.push(i);
+    }
+    //Allow lowercase charcters
+    for (i = 97; i < 123; i++) {
+      validKeyStrokes.push(i);
+    }
+    //Define key entered as long as it's a lowercase or uppercase letter
+    if (validKeyStrokes.indexOf(event.keyCode) !== -1) {
+      x = event.key.toLowerCase();
+    }
+    return x;
+  },
+
+  analyze: function(event) {
+    if (game.ended === false) {
+      //Define key entered as 'x'
+      let x = this.normalize(event);
+      //If a losing letter that hasn't been entered before, penalize
+      if (
+        magicWord.winningLetters.indexOf(x) === -1 &&
+        magicWord.wrongEntries.indexOf(x) === -1
+      ) {
+        this.punishPlayer(x);
+        //If a winning letter that hasn't already been entered, reward
+      } else if (
+        magicWord.winningLetters.indexOf(x) !== -1 &&
+        magicWord.rightEntries.indexOf(x) === -1
+      ) {
+        this.rewardPlayer(x);
+      }
+      judge.checkWinOrLoss();
+      scoreboard.update();
+    }
+  },
+
+  rewardPlayer: function(x) {
+    magicWord.rightEntries.push(x);
+    for (i = 0; i < magicWord.winningLetters.length; i++) {
+      if (x === magicWord.winningLetters[i]) {
+        magicWord.concealedLetters[i] = magicWord.winningLetters[i];
+      }
+    }
+  },
+
+  punishPlayer: function(x) {
+    game.guessesRemaining = game.guessesRemaining - 1;
+    magicWord.wrongEntries.push(x);
+    enemy.moveRight();
+  }
+};
+
 //Judge//////////////////////////////////////////////////
 let judge = {
   checkForLoss: function() {
@@ -101,7 +159,7 @@ let judge = {
       scoreboard.update();
       setTimeout(function() {
         game.beginNew();
-      }, 5000);
+      }, 4500);
     }
   },
   checkWinOrLoss: function() {
@@ -133,7 +191,8 @@ let enemy = {
   defaultXposition: 20,
   xPosition: this.defaultXposition,
   moveRight: function() {
-    this.xPosition += (screenWidth/game.defaultBeginGuesses) - this.defaultXposition;
+    this.xPosition +=
+      screenWidth / game.defaultBeginGuesses - this.defaultXposition;
     document.getElementById("evilEye").style.left = this.xPosition + "px";
     console.log(this.xPosition);
   },
@@ -170,53 +229,6 @@ let audio = {
   }
 };
 
-//**************************************************FUNCTIONS**************************************************
-
-function processInput(event) {
-  //Prevent input from being accepted when game is over
-  if (game.ended === false) {
-    //Define key entered as 'x'
-    let x;
-    let validKeyStrokes = [];
-    //Allow uppercase characters
-    for (i = 65; i < 91; i++) {
-      validKeyStrokes.push(i);
-    }
-    //Allow lowercase charcters
-    for (i = 97; i < 123; i++) {
-      validKeyStrokes.push(i);
-    }
-    //Define key entered as long as it's a lowercase or uppercase letter
-    if (validKeyStrokes.indexOf(event.keyCode) !== -1) {
-      x = event.key.toLowerCase();
-    }
-    //If a losing letter that hasn't been entered before, penalize
-    if (
-      magicWord.winningLetters.indexOf(x) === -1 &&
-      magicWord.wrongEntries.indexOf(x) === -1
-    ) {
-      game.guessesRemaining = game.guessesRemaining - 1;
-      magicWord.wrongEntries.push(x);
-      enemy.moveRight();
-
-      //If a winning letter that hasn't already been entered, reward
-    } else if (
-      magicWord.winningLetters.indexOf(x) !== -1 &&
-      magicWord.rightEntries.indexOf(x) === -1
-    ) {
-      magicWord.rightEntries.push(x);
-
-      for (i = 0; i < magicWord.winningLetters.length; i++) {
-        if (x === magicWord.winningLetters[i]) {
-          magicWord.concealedLetters[i] = magicWord.winningLetters[i];
-        }
-      }
-    }
-    judge.checkWinOrLoss();
-    scoreboard.update();
-  }
-}
-
 //**************************************************RUNTIME**************************************************
 
 //Start the first game
@@ -224,5 +236,5 @@ game.beginNew();
 
 //Handle user input
 document.onkeyup = function(event) {
-  processInput(event);
+  input.analyze(event);
 };
