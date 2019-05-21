@@ -58,8 +58,8 @@ let game = {
   },
 
   beginNew: function() {
-    clearInterval(activeAnimationEnemy);
-    clearInterval(activeAnimationPrincess);
+    enemy.deanimate();
+    princess.deanimate();
     this.resetGuessCount();
     this.ended = false;
     outcomeMessage.reset();
@@ -202,8 +202,9 @@ let scoreboard = {
       "Number of games won: " + game.numberOfGamesWon;
     document.getElementById("gamesLost").innerHTML =
       "Number of games lost: " + game.numberOfGamesLost;
-    document.getElementById("concealedLetters").innerHTML =
-      magicWord.concealedLetters.join(" ");
+    document.getElementById(
+      "concealedLetters"
+    ).innerHTML = magicWord.concealedLetters.join(" ");
   }
 };
 
@@ -214,7 +215,8 @@ let enemy = {
     openEye: "assets/images/openEye.png",
     closedEye: "assets/images/closedEye.png"
   },
-  defaultXposition: 20,
+  animation: "inactive",
+  defaultXposition: 30,
   xPosition: this.defaultXposition,
   setAvatar: function(chosenavatar) {
     document.getElementById("enemy").setAttribute("src", `${chosenavatar}`);
@@ -236,7 +238,7 @@ let enemy = {
     this.resetStartPosition();
   },
   animate: function() {
-    activeAnimationEnemy = setInterval(function() {
+    this.animation = setInterval(function() {
       if (game.ended === false) {
         console.log(enemy.avatars.current);
         if (enemy.avatars.current == enemy.avatars.closedEye) {
@@ -246,6 +248,9 @@ let enemy = {
         }
       }
     }, 1000);
+  },
+  deanimate: function() {
+    clearInterval(this.animation);
   }
 };
 
@@ -257,6 +262,7 @@ let princess = {
     alternate: "assets/images/princessAlternate.png",
     dead: "assets/images/deadPrincess.png"
   },
+  animation: "inactive",
   setAvatar: function(chosenavatar) {
     document.getElementById("princess").setAttribute("src", `${chosenavatar}`);
     document.getElementById("princess").style.transform = "scale(3)";
@@ -267,7 +273,7 @@ let princess = {
     document.getElementById("princess").style.transform = "scale(3)";
   },
   animate: function() {
-    activeAnimationPrincess = setInterval(function() {
+    this.animation = setInterval(function() {
       if (game.ended === false) {
         console.log(princess.avatars.current);
         if (princess.avatars.current == princess.avatars.alive) {
@@ -277,6 +283,9 @@ let princess = {
         }
       }
     }, 500);
+  },
+  deanimate: function() {
+    clearInterval(this.animation);
   }
 };
 
