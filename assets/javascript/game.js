@@ -222,8 +222,7 @@ let enemy = {
     this.avatars.current = chosenavatar;
   },
   moveRight: function() {
-    this.xPosition +=
-      screenWidth / game.defaultBeginGuesses - this.defaultXposition;
+    this.xPosition += 50;
     document.getElementById("enemy").style.left = this.xPosition + "px";
     console.log(this.xPosition);
   },
