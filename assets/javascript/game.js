@@ -115,7 +115,13 @@ let input = {
   },
 
   rewardPlayer: function(x) {
-    game.guessesRemaining = game.guessesRemaining - 1;
+    if (
+      //Only reduce number of guesses if it hasn't been keyed before
+      magicWord.winningLetters.indexOf(x) === -1 &&
+      magicWord.wrongEntries.indexOf(x) === -1
+    ) {
+      game.guessesRemaining = game.guessesRemaining - 1;
+    }
     magicWord.rightEntries.push(x);
     for (i = 0; i < magicWord.winningLetters.length; i++) {
       if (x === magicWord.winningLetters[i]) {
