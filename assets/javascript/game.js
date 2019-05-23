@@ -46,7 +46,7 @@ let magicWord = {
 //Game//////////////////////////////////////////////////
 let game = {
   ended: false,
-  defaultBeginGuesses: 9,
+  defaultBeginGuesses: 15,
   guessesRemaining: 0,
   numberOfGamesWon: 0,
   numberOfGamesLost: 0,
@@ -128,6 +128,7 @@ let input = {
         magicWord.concealedLetters[i] = magicWord.winningLetters[i];
       }
     }
+    enemy.moveRight();
   },
 
   punishPlayer: function(x) {
@@ -221,7 +222,7 @@ let enemy = {
     closedEye: "assets/images/closedEye.png"
   },
   animation: "inactive",
-  defaultXposition: 30,
+  defaultXposition: 27,
   xPosition: this.defaultXposition,
   setAvatar: function(chosenavatar) {
     document.getElementById("enemy").setAttribute("src", `${chosenavatar}`);
@@ -229,7 +230,7 @@ let enemy = {
     this.avatars.current = chosenavatar;
   },
   moveRight: function() {
-    this.xPosition += 50;
+    this.xPosition += 30;
     document.getElementById("enemy").style.left = this.xPosition + "px";
     console.log(this.xPosition);
   },
