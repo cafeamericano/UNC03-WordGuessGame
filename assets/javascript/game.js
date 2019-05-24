@@ -45,7 +45,7 @@ let magicWord = {
 
 //Game//////////////////////////////////////////////////
 let game = {
-  ended: false,
+  isEnded: false,
   defaultBeginGuesses: 15,
   guessesRemaining: 0,
   numberOfGamesWon: 0,
@@ -155,7 +155,7 @@ let outcomeMessage = {
 let judge = {
   checkForLoss: function() {
     if (game.isEnded === false) {
-      if (game.guessesRemaining === 0) {
+      if (game.guessesRemaining <= 0) {
         game.ended = true;
         outcomeMessage.notifyLoss();
         audio.reset();
@@ -169,26 +169,30 @@ let judge = {
     }
   },
   checkForWin: function() {
-    let neededToWin = magicWord.winningLetters.length;
-    let gotRight = 0;
-    for (i = 0; i < magicWord.winningLetters.length; i++) {
-      //For every winning letter
-      if (magicWord.rightEntries.indexOf(magicWord.winningLetters[i]) !== -1) {
-        //If it exists in rightEntries
-        gotRight = gotRight + 1; //Increase the number of letters gotten right by one
+    if (game.isEnded === false) {
+      let neededToWin = magicWord.winningLetters.length;
+      let gotRight = 0;
+      for (i = 0; i < magicWord.winningLetters.length; i++) {
+        //For every winning letter
+        if (
+          magicWord.rightEntries.indexOf(magicWord.winningLetters[i]) !== -1
+        ) {
+          //If it exists in rightEntries
+          gotRight = gotRight + 1; //Increase the number of letters gotten right by one
+        }
       }
-    }
-    if (gotRight === neededToWin) {
-      //If the number of letters gotten right is equal to that needed to win, player wins
-      game.ended = true;
-      outcomeMessage.notifyWin();
-      audio.reset();
-      audio.fanfare.play();
-      game.numberOfGamesWon += 1;
-      scoreboard.update();
-      setTimeout(function() {
-        game.beginNew();
-      }, 4500);
+      if (gotRight === neededToWin) {
+        //If the number of letters gotten right is equal to that needed to win, player wins
+        game.isEnded = true;
+        outcomeMessage.notifyWin();
+        audio.reset();
+        audio.fanfare.play();
+        game.numberOfGamesWon += 1;
+        scoreboard.update();
+        setTimeout(function() {
+          game.beginNew();
+        }, 4500);
+      }
     }
   },
   checkWinOrLoss: function() {
