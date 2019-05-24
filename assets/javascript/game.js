@@ -59,7 +59,7 @@ let game = {
     enemy.deanimate();
     princess.deanimate();
     this.resetGuessCount();
-    this.ended = false;
+    this.isEnded = false;
     outcomeMessage.reset();
     audio.reset();
     magicWord.clear();
@@ -93,7 +93,7 @@ let input = {
   },
 
   analyze: function(event) {
-    if (game.ended === false) {
+    if (game.isEnded === false) {
       //Define key entered as 'x'
       let x = this.normalize(event);
       //If a losing letter that hasn't been entered before, penalize
@@ -156,7 +156,7 @@ let judge = {
   checkForLoss: function() {
     if (game.isEnded === false) {
       if (game.guessesRemaining <= 0) {
-        game.ended = true;
+        game.isEnded = true;
         outcomeMessage.notifyLoss();
         audio.reset();
         audio.gameOver.play();
@@ -250,7 +250,7 @@ let enemy = {
   },
   animate: function() {
     this.animation = setInterval(function() {
-      if (game.ended === false) {
+      if (game.isEnded === false) {
         console.log(enemy.avatars.current);
         if (enemy.avatars.current == enemy.avatars.closedEye) {
           enemy.setAvatar(enemy.avatars.openEye);
@@ -285,7 +285,7 @@ let princess = {
   },
   animate: function() {
     this.animation = setInterval(function() {
-      if (game.ended === false) {
+      if (game.isEnded === false) {
         console.log(princess.avatars.current);
         if (princess.avatars.current == princess.avatars.alive) {
           princess.setAvatar(princess.avatars.alternate);
