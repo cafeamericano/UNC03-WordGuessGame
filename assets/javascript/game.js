@@ -117,7 +117,7 @@ let input = {
   rewardPlayer: function(x) {
     if (
       //Only reduce number of guesses if it hasn't been keyed before
-      magicWord.winningLetters.indexOf(x) === -1 &&
+      magicWord.rightEntries.indexOf(x) === -1 &&
       magicWord.wrongEntries.indexOf(x) === -1
     ) {
       game.guessesRemaining = game.guessesRemaining - 1;
@@ -154,16 +154,18 @@ let outcomeMessage = {
 //Judge//////////////////////////////////////////////////
 let judge = {
   checkForLoss: function() {
-    if (game.guessesRemaining === 0) {
-      game.ended = true;
-      outcomeMessage.notifyLoss();
-      audio.reset();
-      audio.gameOver.play();
-      princess.setAvatar(princess.avatars.dead);
-      game.numberOfGamesLost += 1;
-      setTimeout(function() {
-        game.beginNew();
-      }, 6000);
+    if (game.isEnded === false) {
+      if (game.guessesRemaining === 0) {
+        game.ended = true;
+        outcomeMessage.notifyLoss();
+        audio.reset();
+        audio.gameOver.play();
+        princess.setAvatar(princess.avatars.dead);
+        game.numberOfGamesLost += 1;
+        setTimeout(function() {
+          game.beginNew();
+        }, 6000);
+      }
     }
   },
   checkForWin: function() {
